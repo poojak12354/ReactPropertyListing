@@ -1,0 +1,45 @@
+{
+  "name": "the_land_cart",
+  "version": "1.0.0",
+  "description": "The land cart admin panel",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js",
+    "build": "cd client && npm install && npm run build"
+  },
+  "author": "Webspace",
+  "license": "ISC",
+  "engines": {
+    "node": "14.15.4"
+  },
+  "dependencies": {
+    "assert": "^1.4.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "ejs": "^2.6.1",
+    "ejs-lint": "^0.3.0",
+    "ejs-locals": "^1.0.2",
+    "express": "^4.16.4",
+    "express-ejs-layouts": "^2.5.0",
+    "express-fileupload": "^1.4.0",
+    "express-flash": "^0.0.2",
+    "express-session": "^1.17.3",
+    "express-validator": "^5.3.1",
+    "http": "0.0.0",
+    "js-datepicker": "^4.0.10",
+    "md5": "^2.3.0",
+    "mysql": "^2.18.1",
+    "nodemailer": "^6.7.7",
+    "nodemailer-express-handlebars": "^5.0.0",
+    "nodemon": "^1.18.9",
+    "path": "^0.12.7",
+    "req-flash": "0.0.3",
+    "sharp": "^0.30.7",
+    "twilio": "^3.78.0"
+  },
+  "repository": {}
+}

@@ -1,0 +1,135 @@
+<%- contentFor('HeaderCss') %>
+<!-- perticular page css -->
+  
+
+<%- contentFor('body') %>
+<link href="/public/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" type="text/css">
+<link href="/public/plugins/dropzone/dist/dropzone.css" rel="stylesheet" type="text/css">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-title-box">
+                        <h4 class="page-title"><%= title %></h4>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">The Land Cart</a></li>
+                            <li class="breadcrumb-item active"><%= title %></li>
+                        </ol>
+                        <%- include(viewsDir+'/Partials/TinyCharts') %>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card m-b-20">
+                        <div class="card-body">
+                            <h6>Upload Media</h6>
+                            <hr>
+                            <p class="text-muted m-b-30">
+                                <div class="custom-filter">
+                                    <label class="w-100">
+                                        <div class="d-flex list-inline float-right mb-0">
+                                            <div class="app-search mt-0">
+                                                <div class="form-group mb-0"> 
+                                                    <input type="text" class="form-control" placeholder="Search.." id="tb_search" value="<%= search %>">
+                                                    <button type="button" id="searchterm"><i class="fa fa-search"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </p>
+                            <form id="manage_project" name="manage_project" class="form-horizontal" action="#" method="POST">
+                                <div class="dropzone wss-hidepreview upload-gallery">
+                                    <div class="fallback"></div>
+                                </div>
+                                <div class="dropzone-previews" id="drz_gallery">
+                                    <% if(mediaList && mediaList.length > 0){
+                                        mediaList.forEach(function(file, index){ 
+                                            switch(file.type){
+                                                case "video/mp4":
+                                                case "video/webm":
+                                                case "video/ogg": %>
+                                                    <div class="lc-img-container d-inline-flex mr-2 position-relative">
+                                                        <img src="/public/assets/images/video.jpg" class="thumb-lg img-thumbnail mt-3" title="<%- site_url+'/uploads/media/site_media/'+file.media_path; %>" data-dt="<%- new Date(file.uploaded_at).toLocaleString() %>" data-type="video"/>
+                                                        <a href="javascript:void(0)" id="remove_img" data-file="<%- file.media_path %>" >
+                                                            <i class="fas fa-times-circle"></i>
+                                                        </a>
+                                                    </div>
+                                                <% break;
+                                                case "application/pdf": %>
+                                                    <div class="lc-img-container d-inline-flex mr-2 position-relative">
+                                                        <img src="/public/assets/images/pdf.png" class="thumb-lg img-thumbnail mt-3" title="<%- site_url+'/uploads/media/site_media/'+file.media_path; %>" data-dt="<%- new Date(file.uploaded_at).toLocaleString() %>" data-type="pdf"/>
+                                                        <a href="javascript:void(0)" id="remove_img" data-file="<%- file.media_path %>" >
+                                                            <i class="fas fa-times-circle"></i>
+                                                        </a>
+                                                    </div>
+                                                <% break;
+                                                case "application/msword": %>
+                                                case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+                                                    <div class="lc-img-container d-inline-flex mr-2 position-relative">
+                                                        <img src="/public/assets/images/doc.png" class="thumb-lg img-thumbnail mt-3" title="<%- site_url+'/uploads/media/site_media/'+file.media_path; %>" data-dt="<%- new Date(file.uploaded_at).toLocaleString() %>" data-type="doc"/>
+                                                        <a href="javascript:void(0)" id="remove_img" data-file="<%- file.media_path %>" >
+                                                            <i class="fas fa-times-circle"></i>
+                                                        </a>
+                                                    </div>
+                                                <% break;
+                                                default: %>
+                                                    <div class="lc-img-container d-inline-flex mr-2 position-relative">
+                                                        <img src="<%- '/uploads/media/site_media/'+file.media_path; %>" class="thumb-lg img-thumbnail mt-3" title="<%- site_url+'/uploads/media/site_media/'+file.media_path; %>" data-dt="<%- new Date(file.uploaded_at).toLocaleString() %>" data-type="image"/>
+                                                        <a href="javascript:void(0)" id="remove_img" data-file="<%- file.media_path %>" >
+                                                            <i class="fas fa-times-circle"></i>
+                                                        </a>
+                                                    </div>
+                                                <% break;
+                                            }
+                                         });
+                                    }%>
+                                </div>
+                            </form>
+
+                            <% if (pages > 0 && mediaList.length > 0) { %>
+                                <nav class="mt-4 d-flex justify-content-center">
+                                    <ul class="pagination">
+                                        <% if (current == 1) { %>
+                                            <li class="page-item disabled"><a href="javascript:void(0);" class="page-link">First</a></li>
+                                        <% } else { %>
+                                            <li class="page-item"><a class="page-link" href="<%= pages > 1 ? paginationUrl+'1' : 'javascript:void(0)' %>">First</a></li>
+                                        <% } %>
+                                        <% var cur_index = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+                                        <% if (cur_index !== 1) { %>
+                                            <li class="page-item disabled"><a class="page-link">...</a></li>
+                                        <% } %>
+                                        <% for (var i=1; i <= (Number(pages)) && i <= pages; i++) { %>
+                                            <% if (i == current) { %>
+                                                <li class="page-item active"><a class="page-link" href="<%= pages > 1 ? paginationUrl+i : 'javascript:void(0)' %>"><%= i %></a></li>
+                                            <% } else { %>
+                                                <li class="page-item"><a class="page-link" href="<%= paginationUrl+i %>"><%= i %></a></li>
+                                            <% } %>
+                                            <% if (i == Number(current) + 4 && i < pages) { %>
+                                                <li class="page-item disabled"><a class="page-link" href="javascript:void(0)">...</a></li>
+                                            <% } %>
+                                        <% } %>
+                                        <% if (current == pages) { %>
+                                            <li class="page-item disabled"><a class="page-link" href="javascript:void(0)">Last</a></li>
+                                        <% } else { %>
+                                            <li class="page-item"><a class="page-link" href="<%= paginationUrl+pages %>">Last</a></li>
+                                        <% } %>
+                                    </ul>
+                                </nav>
+                            <% } %>
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+
+
+        </div> <!-- container-fluid -->
+
+    </div> <!-- content -->
+    <script src="/public/plugins/sweet-alert2/sweetalert2.min.js"></script>
+    <script src="/public/plugins/dropzone/dist/dropzone.js"></script>
+    <script type="text/javascript">var site_url = "<%- site_url %>";</script>
+    <script src="/public/assets/pages/media.js"></script>
+<%- contentFor('FooterJs') %>

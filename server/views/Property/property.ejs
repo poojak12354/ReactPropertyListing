@@ -1,0 +1,652 @@
+<%- contentFor('HeaderCss') %>
+<!-- perticular page css -->
+  
+
+<%- contentFor('body') %>
+
+<% var neighbourhood_data = data && data.neighbourhood ? data.neighbourhood.split(",").map(Number) : '';
+var amenities_data = data && data.amenities ? data.amenities.split(",").map(Number) : ''; %>
+<link rel="stylesheet" href="/public/plugins/iconpicker/icon-picker-all.css"/>
+<link rel="stylesheet" href="/public/plugins/select2/css/select2.min.css"/>
+<link href="/public/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" type="text/css">
+<link href="/public/plugins/dropzone/dist/dropzone.css" rel="stylesheet" type="text/css">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-title-box">
+                        <h4 class="page-title"><%= title %></h4>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">The Land Cart</a></li>
+                            <li class="breadcrumb-item active"><%= title %></li>
+                        </ol>
+                        <%- include(viewsDir+'/Partials/TinyCharts') %>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+            <div class="row">
+                <div class="col-12">
+                    <form id="manage_form" name="manage_form" class="form-horizontal" action="/property" method="POST" data-type="property">
+                        <input type="hidden" name="frm_id" id="frm_id" value="<%= data ? data.property_id : 0 %>"/>
+                        <% if(success != "") {%> 
+                            <div class="alert alert-success" role="alert">
+                                <strong>Done!</strong> <%= success %>
+                            </div>
+                        <% }
+                        if(error != "") {%> 
+                            <div class="alert alert-danger" role="alert">
+                                <strong>Error!</strong> <%= error %>
+                            </div>
+                        <% } %>
+                        <div class="card m-b-20">
+                            <div class="card-body">
+                                <p class="text-muted m-b-30">
+                                    <a title="Back to Properties" class="btn btn-outline-secondary" href="/properties"><i class="fas fa-arrow-left"></i> Back to Properties</a>
+                                </p>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="form-label" for="property_name">Property Name</label>
+                                                <input class="form-control required" type="text" name="property_name" id="property_name" placeholder="Property Name" autocomplete="off" autofill="false" data-key="Property Name" value="<%= data ? data.title : '' %>">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="form-label" for="form_content">Property Description</label>
+                                                <textarea id="form_content" name="form_content"><%= data ? data.detail : '' %></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- end col -->
+                            </div> <!-- end card-body -->
+                        </div> <!-- end card -->
+
+                        <div class="card m-b-20">
+                            <div class="card-body">
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-pills nav-justified" role="tablist">
+
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link active" data-toggle="tab" href="#general" role="tab"><i class="fas fa-file-alt"></i> General</a>
+                                    </li>
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link" data-toggle="tab" href="#location" role="tab"><i class="fas fa-map-marker-alt"></i> Location</a>
+                                    </li>
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link" data-toggle="tab" href="#gallery" role="tab"><i class="fas fa-images"></i> Gallery</a>
+                                    </li>
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link" data-toggle="tab" href="#videos" role="tab"><i class="fas fa-video"></i> Videos</a>
+                                    </li>
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link" data-toggle="tab" href="#plans" role="tab"><i class="fas fa-building"></i> Floor Plans</a>
+                                    </li>
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link" data-toggle="tab" href="#attachments" role="tab"><i class="fas fa-folder-open"></i> Attachments</a>
+                                    </li>
+                                </ul>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div class="tab-pane active p-3" id="general" role="tabpanel">
+                                        <h6>General Information</h6>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="featured">Featured</label>
+                                                    <div class="form-check form-switch form-switch-md form-group">
+                                                        <input type="checkbox" class="form-check-input" id="featured" name="featured" value="1"<%= data && data.is_featured == 1 ? ' checked="checked"' : '' %>>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="form-group">
+                                                    <label class="form-label">Price</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon input-group-prepend">
+                                                            <span class="input-group-text">₹</span>
+                                                        </span>
+                                                        <input class="form-control wss-mt1" type="text" name="property_price" id="property_price" data-key="Price" value="<%= data ? data.price : '' %>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="property_for">Property For</label>
+                                                    <select name="property_for" id="property_for" class="form-control required" data-key="Property For">
+                                                        <option value="">Select Type</option>
+                                                        <option value="sale"<%= data && data.property_for == 'sale' ? ' selected="selected"' : '' %>>Sale</option>
+                                                        <option value="rent"<%= data && data.property_for == 'rent' ? ' selected="selected"' : '' %>>Rent</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="address">Address</label>
+                                                    <input type="text" class="form-control required" name="address" id="address" placeholder="Address" data-key="Address" autocomplete="off" autofill="false" value="<%= data ? data.address : '' %>">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="city">City</label>
+                                                    <select name="city" id="city" class="form-control required" data-key="City">
+                                                        <option value="">Select City</option>
+                                                        <% if(dataCities.length > 0) {
+                                                            dataCities.forEach(function(row){ %>
+                                                                <option value="<%= row.city_id %>"<%= data && data.city == row.city_id ? ' selected="selected"' : '' %>><%= row.name %></option>
+                                                            <% });
+                                                        } %>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="zip">Zipcode</label>
+                                                    <input type="text" class="form-control required" name="zip" id="zip" placeholder="Zipcode" data-key="Zipcode" autocomplete="off" autofill="false" value="<%= data ? data.pincode : '' %>">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="area">Property size (ft²)</label>
+                                                    <input type="text" class="form-control required" name="area" id="area" placeholder="Property size" data-key="Property size" autocomplete="off" autofill="false" value="<%= data ? data.area : '' %>">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="status">Status</label>
+                                                    <select name="status" id="status" class="form-control" data-key="Status">
+                                                        <option value="ready-to-move"<%= data && data.status == 'ready-to-move' ? ' selected="selected"' : '' %>>Ready To Move</option>
+                                                        <option value="under-construction"<%= data && data.status == 'under-construction' ? ' selected="selected"' : '' %>>Under Contruction</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="property_age">Property Age</label>
+                                                    <input type="text" class="form-control" name="property_age" id="property_age" placeholder="Property Age" data-key="Property Age" autocomplete="off" autofill="false" value="<%= data && data.property_age != 0 ? data.property_age : '' %>">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="furnishing">Furnishing</label>
+                                                    <select name="furnishing" id="furnishing" class="form-control" data-key="Status">
+                                                        <option value="fully-furnished"<%= data && data.furnishing == 'fully-furnished' ? ' selected="selected"' : '' %>>Fully Furnished</option>
+                                                        <option value="semi-furnished"<%= data && data.furnishing == 'semi-furnished' ? ' selected="selected"' : '' %>>Semi Furnished</option>
+                                                        <option value="unfurnished"<%= data && data.furnishing == 'unfurnished' ? ' selected="selected"' : '' %>>Unfurnished</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="project_type">Project Type</label>
+                                                    <select name="project_type" id="project_type" class="form-control" data-key="Project Type">
+                                                        <% if(dataTypes.length > 0) {
+                                                            dataTypes.forEach(function(row){ %>
+                                                                <option value="<%= row.type_id %>"<%= data && data.type == row.type_id ? ' selected="selected"' : '' %>><%= row.name %></option>
+                                                            <% });
+                                                        } %>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="neighbourhood">Neighbourhood</label>
+                                                    <select name="neighbourhood" id="neighbourhood" class="form-control" data-key="Neighbourhood" multiple="multiple">
+                                                        <option value="">Select Neighbourhood</option>
+                                                        <% if(dataNeighbour.length > 0) {
+                                                            dataNeighbour.forEach(function(row){ %>
+                                                                <option value="<%= row.neighbour_id %>"<%- neighbourhood_data != "" && neighbourhood_data.includes(row.neighbour_id) ? ' selected="selected"' : '' %> data-icon="<%= row.icon %>"><%= row.name %></option>
+                                                            <% });
+                                                        } %>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="ameneties">Ameneties</label>
+                                                    <select name="ameneties" id="ameneties" class="form-control" data-key="Ameneties" multiple="multiple">
+                                                        <option value="">Select Ameneties</option>
+                                                        <% if(dataAmenities.length > 0) {
+                                                            dataAmenities.forEach(function(row){ %>
+                                                                <option value="<%= row.aid %>"<%- amenities_data != "" && amenities_data.includes(row.aid) ? ' selected="selected"' : '' %> data-icon="<%= row.icon %>"><%= row.name %></option>
+                                                            <% });
+                                                        } %>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="features">Specifications/Features</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <table class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;" id="tbl_specifications">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Heading</th>
+                                                            <th>Features</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% var additonalFeatures = data && data.additional_features != "" ? JSON.parse(data.additional_features)  : '';
+                                                        
+                                                        if(additonalFeatures.length > 0) {
+                                                            additonalFeatures.forEach(function(features){ %>
+                                                                <tr>
+                                                                    <td class="align-top">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label" for="title">Heading</label>
+                                                                            <input type="text" class="form-control" name="heading[]" id="heading" placeholder="Heading" autocomplete="off" autofill="false" value="<%= features.heading %>">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div id="feature_list">
+                                                                            <% if(features.feature_list.length > 0) {
+                                                                                features.feature_list.forEach(function(feature_list, index){ %>
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-5">
+                                                                                            <div class="form-group">
+                                                                                                <label class="form-label" for="title">Title</label>
+                                                                                                <input type="text" class="form-control" name="title[]" id="title" placeholder="Title" autocomplete="off" autofill="false" value="<%- feature_list.title %>">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-5">
+                                                                                            <div class="form-group">
+                                                                                                <label class="form-label" for="description">Description</label>
+                                                                                                <input type="text" class="form-control" name="description[]" id="description" placeholder="Description" autocomplete="off" autofill="false" value="<%- feature_list.desc %>">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-2 d-table">
+                                                                                            <% if(index > 0) { %>
+                                                                                                <div class="d-table-cell align-middle">
+                                                                                                    <button type="button" id="del_item" class="btn mt-2"><i class="fas fa-trash"></i></button>
+                                                                                                </div>
+                                                                                            <% } %>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                <% });
+                                                                            } else { %>
+                                                                                <div class="row">
+                                                                                    <div class="col-md-5">
+                                                                                        <div class="form-group">
+                                                                                            <label class="form-label" for="title">Title</label>
+                                                                                            <input type="text" class="form-control" name="title[]" id="title" placeholder="Title" autocomplete="off" autofill="false" value="">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-5">
+                                                                                        <div class="form-group">
+                                                                                            <label class="form-label" for="description">Description</label>
+                                                                                            <input type="text" class="form-control" name="description[]" id="description" placeholder="Description" autocomplete="off" autofill="false" value="">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-2"></div>
+                                                                                </div>
+                                                                            <% } %>
+                                                                        </div>
+                                                                        <button type="button" id="add_more_featues" class="btn btn-primary w-md float-right"><i class="fas fa-plus"></i> Add More</button>
+                                                                    </td>
+                                                                    <td></td>
+                                                                </tr>
+                                                            <% });
+                                                        } else { %>
+                                                            <tr>
+                                                                <td class="align-top">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label" for="title">Heading</label>
+                                                                        <input type="text" class="form-control" name="heading[]" id="heading" placeholder="Heading" autocomplete="off" autofill="false" value="">
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div id="feature_list">
+                                                                        <div class="row">
+                                                                            <div class="col-md-5">
+                                                                                <div class="form-group">
+                                                                                    <label class="form-label" for="title">Title</label>
+                                                                                    <input type="text" class="form-control" name="title[]" id="title" placeholder="Title" autocomplete="off" autofill="false" value="">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <div class="form-group">
+                                                                                    <label class="form-label" for="description">Description</label>
+                                                                                    <input type="text" class="form-control" name="description[]" id="description" placeholder="Description" autocomplete="off" autofill="false" value="">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-2"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <button type="button" id="add_more_featues" class="btn btn-primary w-md float-right"><i class="fas fa-plus"></i> Add More</button>
+                                                                </td>
+                                                                <td></td>
+                                                            </tr>
+                                                        <% } %>
+                                                    </tbody>
+                                                </table>
+                                                <button type="button" id="add_more_specifications" class="btn btn-primary w-md"><i class="fas fa-plus"></i> Add More</button>
+                                                <textarea class="wss_hidden" name="add_specs" id="add_specs"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane p-3" id="location" role="tabpanel">
+                                        <h6>Location Information</h6>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label class="form-label">Location </label>
+                                                    <div class="pac-card" id="pac-card">
+                                                        <div id="pac-container">
+                                                            <input class="form-control wss-mt1" type="text" name="property_location" id="property_location" data-key="Location" autocomplete="off" autofill="false" placeholder="Enter a location" value="<%= data ? data.map_address : '' %>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">Info Popup Title </label>
+                                                    <div class="form-group">
+                                                        <input class="form-control" type="text" name="loc_name" id="loc_name" data-key="Price" placeholder="Eg. Omega City" autocomplete="off" autofill="false" value="<%= data ? data.info_title : '' %>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">Info Popup Description </label>
+                                                    <div class="form-group">
+                                                        <input class="form-control" type="text" name="loc_detail" id="loc_detail" data-key="Price" placeholder="Eg. Mohali, Ludhiana - Chandigarh State Highway, Guru Teg Bahadur Nagar, Kharar, Punjab, India" autocomplete="off" autofill="false" value="<%= data ? data.info_description : '' %>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">Latitude </label>
+                                                    <div class="form-group">
+                                                        <input class="form-control" type="text" name="loc_lat" id="loc_lat" data-key="Latitude" placeholder="Eg. 30.733315" autocomplete="off" autofill="false" value="<%= data ? data.adr_lat : '' %>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">Longitude </label>
+                                                    <div class="form-group">
+                                                        <input class="form-control" type="text" name="loc_long" id="loc_long" data-key="Longitude" placeholder="Eg. 76.779419" autocomplete="off" autofill="false" value="<%= data ? data.adr_long : '' %>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="map" style="height: 500px;"></div>
+                                        <div id="infowindow-content">
+                                            <% var link = data && data.info_title != "" ? data.info_title.replace(/ /g,"+")+'/@'+data.adr_lat+','+data.adr_long+',17z' : 'Himalaya+Marg,+Chandigarh+Sector+22B,+Chandigarh,+160018+Sector+22B,+Sector+18D+Chandigarh+India/@30.733315,76.779419,13z'; %>
+                                            <span id="place-name" class="title"><%= data ? data.info_title : 'Chandigarh' %></span><br />
+                                            <span id="place-address"><%= data ? data.info_description : '' %></span><br />
+                                            <a href="<%= 'https://www.google.com/maps/place/'+link %>" id="view_on_map" target="_blank">View on Google Maps</a>
+                                        </div>
+                                      
+                                    </div>
+                                    <div class="tab-pane p-3" id="gallery" role="tabpanel">
+                                        <h6>Upload Gallery</h6>
+                                        <hr>
+                                        <div class="dropzone wss-hidepreview upload-gallery">
+                                            <div class="fallback">
+                                                <input name="file[]" type="file" multiple="multiple">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="dropzone-previews" id="drz_gallery">
+                                            <% if(media && media.length > 0){
+                                                media.forEach(function(file){ 
+                                                    switch (file.type) {
+                                                        case 'video' : %>
+                                                            <div class="lc-img-container d-inline-flex mr-2">
+                                                                <img src="/public/assets/images/video.jpg" class="thumb-lg img-thumbnail mt-3" data-file="<%- file.media_path %>" data-type="video"/>
+                                                                <a href="javascript:void(0)" id="remove_img" data-file="<%- file.media_path %>"><i class="fas fa-times-circle"></i></a>
+                                                            </div>
+                                                        <% break;
+                                                        case 'image' : %>
+                                                            <div class="lc-img-container d-inline-flex mr-2">
+                                                                <img src="<%- '/uploads/media/property/'+file.media_path; %>" class="thumb-lg img-thumbnail mt-3" data-file="<%- file.media_path %>" data-type="image"/>
+                                                                <a href="javascript:void(0)" id="remove_img" data-file="<%- file.media_path %>"><i class="fas fa-times-circle"></i></a>
+                                                            </div>
+                                                        <% break;
+                                                    }
+                                                });
+                                            } %>
+                                        </div>
+                                        <input type="hidden" name="hdn_gallery" id="hdn_gallery"/>
+                                    </div>
+                                    <div class="tab-pane p-3" id="videos" role="tabpanel">
+                                        <h6>Vidoes (Only Youtube Url)</h6>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;" id="tbl_videos">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>List in Gallery</th>
+                                                            <th>Video Url</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% if(media && media.length > 0){
+                                                            var counter = 0;
+                                                            media.forEach(function(file){
+                                                                if(file.type == 'url') { %>
+                                                                    <tr>
+                                                                        <td class="align-top">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label" for="in_gallery">Include in gallery?</label>
+                                                                                <div class="form-check form-switch form-switch-md form-group">
+                                                                                    <input type="checkbox" class="form-check-input" id="in_gallery" name="in_gallery"<%- file.in_gallery == 1 ? 'checked="checked"' : '' %> value="1" >
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="align-top">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label" for="title">Video Url</label>
+                                                                                <input type="text" class="form-control" name="video_url" id="video_url" placeholder="Video Url" autocomplete="off" autofill="false" value="<%- file.media_path %>">
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <% if(counter > 0){ %>
+                                                                                <button type="button" id="del_video" class="btn"><i class="fas fa-trash"></i></button>
+                                                                            <% } %>
+                                                                        </td>
+                                                                    </tr>
+                                                                <% 
+                                                                counter++;
+                                                                }
+                                                            });
+                                                            if(counter == 0){ %>
+                                                                <tr>
+                                                                    <td class="align-top">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label" for="in_gallery">Include in gallery?</label>
+                                                                            <div class="form-check form-switch form-switch-md form-group">
+                                                                                <input type="checkbox" class="form-check-input" id="in_gallery" name="in_gallery" value="1">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="align-top">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label" for="title">Video Url</label>
+                                                                            <input type="text" class="form-control" name="video_url" id="video_url" placeholder="Video Url" autocomplete="off" autofill="false" value="">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td></td>
+                                                                </tr>
+                                                            <% }
+                                                        } else { %>
+                                                            <tr>
+                                                                <td class="align-top">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label" for="in_gallery">Include in gallery?</label>
+                                                                        <div class="form-check form-switch form-switch-md form-group">
+                                                                            <input type="checkbox" class="form-check-input" id="in_gallery" name="in_gallery" value="1">
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="align-top">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label" for="title">Video Url</label>
+                                                                        <input type="text" class="form-control" name="video_url" id="video_url" placeholder="Video Url" autocomplete="off" autofill="false" value="">
+                                                                    </div>
+                                                                </td>
+                                                                <td></td>
+                                                            </tr>
+                                                        <% } %>
+                                                    </tbody>
+                                                </table>
+                                                <button type="button" id="add_more_video" class="btn btn-primary w-md"><i class="fas fa-plus"></i> Add More</button>
+                                                <textarea class="wss_hidden" name="vid_data" id="vid_data"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane p-3" id="plans" role="tabpanel">
+                                        <h6>Floor Plans</h6>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;" id="tbl_plans">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width:20%;">Title</th>
+                                                            <th style="width:75%;">Details</th>
+                                                            <th style="width:5%;"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% if(plans && plans.length > 0){
+                                                            plans.forEach(function(plan, index){ %>
+                                                                <tr>
+                                                                    <td class="align-top">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label" for="plan_title">Title</label>
+                                                                            <input type="text" class="form-control" name="plan_title" id="plan_title" placeholder="eg. 2BHK" autocomplete="off" autofill="false" value="<%- plan.title %>">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="align-top">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label" for="plan_content">Plan Details</label>
+                                                                            <textarea class="floor-plans" id="plan_content_<%- index %>" name="plan_content" data-index="<%- index+1 %>"><%- plan.description %></textarea>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-md-4">
+                                                                                <button type="button" class="dropzone wss-hidepreview upload-plan-<%- index %> only-button mt-3 align-top" data-index="<%- index %>">Choose Plan Image</button>
+                                                                                <input type="hidden" name="hdn_plan_<%- index %>" id="hdn_plan_<%- index %>" value="<%- plan.media_path %>"/>
+                                                                            </div>
+                                                                            <div class="col-md-8">
+                                                                                <div class="dropzone-previews d-inline" id="drz_preview_<%- index %>">
+                                                                                    <% if(plan.media_path != "") { %>
+                                                                                        <div class="lc-img-container d-inline-flex">
+                                                                                            <img src="<%- '/uploads/media/property/'+plan.media_path %>" class="w-100 mt-3" data-file="<%- plan.media_path %>" data-type="image"/>
+                                                                                            <a href="javascript:void(0)" data-index="<%- index %>" id="remove_plan_img" data-file="<%- plan.media_path %>"><i class="fas fa-times-circle"></i></a>
+                                                                                        </div>
+                                                                                    <% } %>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <% if(index > 0){ %>
+                                                                            <button type="button" id="del_plan" class="btn"><i class="fas fa-trash"></i></button>
+                                                                        <% } %>
+                                                                    </td>
+                                                                </tr>
+                                                            <% });
+                                                        } else { %>
+                                                            <tr>
+                                                                <td class="align-top">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label" for="plan_title">Title</label>
+                                                                        <input type="text" class="form-control" name="plan_title" id="plan_title" placeholder="eg. 2BHK" autocomplete="off" autofill="false" value="">
+                                                                    </div>
+                                                                </td>
+                                                                <td class="align-top">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label" for="plan_content">Plan Details</label>
+                                                                        <textarea class="floor-plans" id="plan_content" name="plan_content" data-index="1"></textarea>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <button type="button" class="dropzone wss-hidepreview upload-plan-0 only-button mt-3 align-top" data-index="0">Choose Plan Image</button>
+                                                                        <input type="hidden" name="hdn_plan_0" id="hdn_plan_0"/>
+                                                                        </div>
+                                                                        <div class="col-md-8">
+                                                                            <div class="dropzone-previews d-inline" id="drz_preview_0"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td></td>
+                                                            </tr>
+                                                        <% } %>
+                                                    </tbody>
+                                                </table>
+                                                <button type="button" id="add_more_plans" class="btn btn-primary w-md"><i class="fas fa-plus"></i> Add More</button>
+                                                <textarea class="wss_hidden" name="plans_data" id="plans_data"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane p-3" id="attachments" role="tabpanel">
+                                        <div class="form-group">
+                                            <h6>Upload Brochure</h6>
+                                            <hr>
+                                            <button type="button" class="dropzone wss-hidepreview upload-doc only-button">Choose File</button>
+                                            <% var documentFile = '';
+                                            if(media && media.length > 0){
+                                                media.forEach(function(file){
+                                                    if(file.type == 'doc') {
+                                                        documentFile = file.media_path;
+                                                    }
+                                                });
+                                            } %>
+                                            <input type="hidden" name="hdn_document" id="hdn_document" value="<%- documentFile %>"/>
+                                            <div class="dropzone-previews d-inline" id="drz_document">
+                                                <% if(documentFile != ""){ %>
+                                                    <div class="lc-img-container d-inline-flex mr-2">
+                                                        <p><%- documentFile %> <a href="javascript:void(0)" id="remove_doc" data-file="<%- documentFile %>"><i class="fas fa-times-circle"></i></a></p>
+                                                    </div>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- end card-body -->
+                            <% if(data) { %>
+                                <textarea class="wss_hidden" name="delete_media" id="delete_media"></textarea>
+                                <textarea class="wss_hidden" name="delete_plan_media" id="delete_plan_media"></textarea>
+                            <% } %>
+                        </div> <!-- end card -->
+                        <div class="mt-4">
+                            <button type="submit" id="btn_submit" class="btn btn-primary w-md">Save</button>
+                        </div>
+                    </form>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+
+
+        </div> <!-- container-fluid -->
+
+    </div> <!-- content -->
+    <script src="/public/plugins/dropzone/dist/dropzone.js"></script>
+    <script src="/public/plugins/tinymce/tinymce.min.js"></script>
+    <script src="/public/plugins/select2/js/select2.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLE_KEY %>&callback=initMap&libraries=places&v=weekly" defer ></script>
+    <script src="/public/plugins/sweet-alert2/sweetalert2.min.js"></script>
+    <script src="/public/assets/pages/project.js"></script>
+<%- contentFor('FooterJs') %>

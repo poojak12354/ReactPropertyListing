@@ -1,0 +1,88 @@
+#ws_user_avatar{
+    min-height: auto;
+    padding: 0;
+}
+
+.wss_hidden{
+    display: none !important;
+}
+
+div.custom-filter select {
+    width: auto;
+    display: inline-block;
+}
+.form-check-input {
+    cursor: pointer;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.25em;
+    vertical-align: top;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: 1px solid #adb5bd;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+    -webkit-transition: background-color .15s ease-in-out,background-position .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+    transition: background-color .15s ease-in-out,background-position .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+    transition: background-color .15s ease-in-out,background-position .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: background-color .15s ease-in-out,background-position .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+}
+.form-switch .form-check-input {
+    width: 2em;
+    margin-left: -2.5em;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280, 0, 0, 0.25%29'/%3e%3c/svg%3e");
+    background-position: left center;
+    border-radius: 2em;
+    -webkit-transition: background-position .15s ease-in-out;
+    transition: background-position .15s ease-in-out;
+}
+.form-check-input:checked {
+    background-color: #7a6fbe;
+    border-color: #7a6fbe;
+}
+.form-switch-md {
+    padding-left: 2.5rem;
+    min-height: 24px;
+    line-height: 24px;
+}
+.form-switch-md .form-check-input {
+    width: 40px;
+    height: 20px;
+    left: -0.5rem;
+    position: relative;
+}
+.form-switch .form-check-input:checked {
+    background-position: right center;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+}
+
+.output-icon{
+    font-size: 5rem;
+}
+
+.wss-mt1{
+    margin-top: 1px;
+}
+.wss-hidepreview.only-button .dz-message{
+    display: none;
+}
+
+.wss-hidepreview.only-button{
+    min-height: 13px;
+    padding: 9px 50px;
+}
+
+.wss-hidepreview.dz-started .dz-message{ 
+    display: block;
+}
+.wss-hidepreview.only-button.dz-started .dz-message{
+    display: none;
+}
+.swal-wide{
+    width:850px !important;
+}

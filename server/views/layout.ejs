@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+       <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+        <title><%= title %></title>
+        <meta content="Admin Dashboard" name="description" />
+        <meta content="Themesbrand" name="author" />
+
+         <% include ./Partials/HeaderStyle  %>
+        
+    </head>
+    <body>
+      <div id="wrapper">
+        <% if (session.loggedin) {%>
+          <% include ./Partials/Header  %>
+          <% include ./Partials/Sidebar  %>
+        <% } %>
+        <% if (session.loggedin) {%>
+          <% include ./Partials/FooterScript  %>
+        <% } %>
+        <div class="content-page">
+        <%- body %>
+        </div>
+        <link href="/public/assets/css/admin-style.css" rel="stylesheet" type="text/css">
+        <% if (session.loggedin) {%>
+          <% include ./Partials/Footer %>
+        <% } %>
+      </div>
+      <!-- App js -->
+     <script src="/public/assets/js/app.js"></script>
+
+    </body>
+</html>

@@ -1,0 +1,130 @@
+<%- contentFor('HeaderCss') %>
+<!-- perticular page css -->
+  
+
+<%- contentFor('body') %>
+
+    <div class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-title-box">
+                        <h4 class="page-title"><%= title %></h4>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">The Land Cart</a></li>
+                            <li class="breadcrumb-item active"><%= title %></li>
+                        </ol>
+                        <%- include(viewsDir+'/Partials/TinyCharts') %>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+            <div class="row">
+                <div class="col-12 d-flex align-items-center justify-content-center">
+                    <div class="col-xl-8 col-md-6">
+                        <div class="card directory-card m-b-20">
+                            <div>
+                                <form id="add_new_user" name="add_new_user" class="form-horizontal" action="/user" method="POST">
+                                    <div class="directory-bg text-center">
+                                        <div class="directory-overlay">
+                                                <span id="imageuploader">
+                                                    <input name="profileimg" id="profileimg" type="hidden" value="<%= userData && userData.image !== null && userData.image != '' ? userData.image : '' %>">
+                                                    <input type="hidden" name="frm_id" id="frm_id" value="<%= userData ? userData.uid : 0 %>"/>
+                                                    <img id="ws_user_avatar" class="rounded-circle thumb-lg img-thumbnail dropzone" data-thumb="/public/assets/images/users/user.png" src="<%= userData && userData.image !== null && userData.image != '' ? '/uploads/users/'+userData.image : '/public/assets/images/users/user.png' %>" alt="Generic placeholder image">
+                                                    <a href="javascript:void(0)" id="remove_img">x</a>
+                                                </span>
+                                        </div>
+                                    </div>
+                                    <div class="directory-content p-4">
+                                        <div class="mt-4">
+                                            <% if(success != "") {%> 
+                                                <div class="alert alert-success" role="alert">
+                                                    <strong>Done!</strong> <%= success %>
+                                                </div>
+                                            <% } %>
+                                            <% if(error != "") {%> 
+                                                <div class="alert alert-danger" role="alert">
+                                                    <strong>Error!</strong> <%= error %>
+                                                </div>
+                                            <% } %>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="email">Email Address</label>
+                                                        <input type="email" class="form-control" name="email" id="email" placeholder="Email Address" data-key="Email Address" autocomplete="off" autofill="false" value="<%= userData  ? userData.email : '' %>">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="fname">First Name</label>
+                                                        <input type="text" class="form-control" name="fname" id="fname" placeholder="First Name" data-key="First Name" autocomplete="off" autofill="false" value="<%= userData  ? userData.fname : '' %>">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="lname">Last Name</label>
+                                                        <input type="text" class="form-control" id="lname" name="lname" placeholder="Last Name" data-key="Last Name" autocomplete="off" autofill="false" value="<%= userData  ? userData.lname : '' %>">
+                                                    </div>
+                                                </div>
+                                            </div>
+            
+                                            <div class="row">
+                                                <div class="<%= userData  ? 'col-md-12' : 'col-md-6' %>">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="username">Username</label>
+                                                        <input type="text" class="form-control" name="username" id="username" placeholder="Username" data-key="Username" autocomplete="off" autofill="false" value="<%= userData  ? userData.username : '' %>">
+                                                    </div>
+                                                </div>
+                                                <% if(!userData) {%>                                            
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="formrow-password-input">Password</label>
+                                                            <input type="password" class="form-control" id="password" name="password" placeholder="Password" data-key="Password">
+                                                        </div>
+                                                    </div>
+                                                <% } %>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="phone">Phone Number</label>
+                                                        <input type="number" max="11" min="10" class="form-control" name="phone" id="phone" placeholder="Phone Number" data-key="Phone number" autocomplete="off" autofill="false" value="<%= userData  ? userData.phone : '' %>">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="role">Role</label>
+                                                        <select name="role" id="role" class="form-control" data-key="Role">
+                                                            <option value="">Select Role</option>
+                                                            <option value="staff" <%= userData && userData.role == 'staff' ? 'selected="selected"'  : '' %>>Staff Member</option>
+                                                            <option value="agent" <%= userData && userData.role == 'agent' ? 'selected="selected"'  : '' %>>Agent</option>
+                                                            <option value="administrator" <%= userData && userData.role == 'administrator' ? 'selected="selected"'  : '' %>>Administrator</option>
+                                                            <option value="customer" <%= userData && userData.role == 'customer' ? 'selected="selected"'  : '' %>>Customer</option>
+                                                        </select>
+                                                    </div>
+                                                </div>  
+                                            </div>
+                                            <div class="mt-4">
+                                                <button type="submit" id="btn_submit" class="btn btn-primary w-md">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+
+
+        </div> <!-- container-fluid -->
+
+    </div> <!-- content -->
+    <script src="/public/plugins/dropzone/dist/dropzone.js"></script>
+    <script src="/public/assets/pages/user.js"></script>
+
+<%- contentFor('FooterJs') %>

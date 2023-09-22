@@ -1,0 +1,158 @@
+  
+  <%- contentFor('HeaderCss') %>     
+    
+  <%- contentFor('body') %>
+  <link href="/public/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" type="text/css">
+  <!-- Start content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title"><%= title %></h4>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="javascript:void(0);">The Land Cart</a></li>
+                                <li class="breadcrumb-item active"><%= title %></li>
+                            </ol>
+    
+                            <%- include(viewsDir+'/Partials/TinyCharts') %>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card m-b-20">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="text-muted m-b-30">
+                                            <h5>Add New <%= title %></h5>
+                                        </p>
+                                        <form id="manage_amenities" name="manage_amenities" class="form-horizontal" action="/amenities" method="POST">
+                                            <input type="hidden" name="frm_id" id="frm_id" value="<%= data ? data.aid : 0 %>"/>
+                                            <% if(success != "") {%> 
+                                                <div class="alert alert-success" role="alert">
+                                                    <strong>Done!</strong> <%= success %>
+                                                </div>
+                                            <% } %>
+                                            <% if(error != "") {%> 
+                                                <div class="alert alert-danger" role="alert">
+                                                    <strong>Error!</strong> <%= error %>
+                                                </div>
+                                            <% } %>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="form-label" for="name">Name</label>
+                                                        <input type="text" class="form-control" name="amenities_name" id="amenities_name" placeholder="Name" data-key="Name" autocomplete="off" autofill="false" value="<%= data ? data.name : '' %>">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label align-top mr-4" for="icon">Choose Icon</label>
+                                                        <span class="<%= data ? '' : 'd-none' %>" id="output">
+                                                            <div class="output-icon d-inline-flex border p-2" id="output_icon"><%- data ? data.icon : '' %></div>
+                                                            <textarea name="icon_html" id="icon_html" class="d-none" data-key="Icon"><%= data ? data.icon : '' %></textarea>
+                                                            <a href="javascript:void(0)" class="align-top" id="remove_icon"><i class="fas fa-times-circle"></i></a>
+                                                        </span>
+                                                        <button type="button" id="select_icon" class="btn btn-primary" title="Open the Icon Library">Select</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="submit" id="btn_submit" class="btn btn-primary w-md">Save</button>
+                                        </form>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="text-muted m-b-30">
+                                            <div class="custom-filter">
+                                                <label class="w-100">
+                                                    <div class="d-flex list-inline float-right mb-0">
+                                                        <div class="app-search mt-0">
+                                                            <div class="form-group mb-0"> 
+                                                                <input type="text" class="form-control" placeholder="Search.." id="tb_search" value="<%= search %>">
+                                                                <button type="button" id="searchterm"><i class="fa fa-search"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </p>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Icon</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% if(dataList.length > 0) {%>
+                                                            <% dataList.forEach(function(row){ %>
+                                                                <tr>
+                                                                    <td><%= row.name.replace(/\w/, c => c.toUpperCase()) %></td>
+                                                                    <td><%- row.icon %></td>
+                                                                    <td>
+                                                                        <a title="Edit" class="btn btn-outline-secondary" href="/amenities?edit=<%= row.aid %>"><i class="fas fa-pencil-alt"></i></a>
+                
+                                                                        <a id="delete_entry" title="Delete" class="btn btn-outline-danger" data-id="<%= row.aid %>" href="javascript:void(0)"><i class="far fa-trash-alt"></i></a>
+                
+                                                                    </td>
+                                                                </tr>
+                                                            <% }); %>
+                                                        <% } else { %>
+                                                            <tr>
+                                                                <td colspan="3" class="text-center">No record found.</td>
+                                                            </tr>
+                                                        <% } %>
+                                                    </tbody>
+                                                </table>
+                                                <% if (pages > 0 && dataList.length > 0) { %>
+                                                    <nav>
+                                                        <ul class="pagination">
+                                                            <% if (current == 1) { %>
+                                                                <li class="page-item disabled"><a href="javascript:void(0);" class="page-link">First</a></li>
+                                                            <% } else { %>
+                                                                <li class="page-item"><a class="page-link" href="<%= pages > 1 ? paginationUrl+'1' : 'javascript:void(0)' %>">First</a></li>
+                                                            <% } %>
+                                                            <% var cur_index = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+                                                            <% if (cur_index !== 1) { %>
+                                                                <li class="page-item disabled"><a class="page-link">...</a></li>
+                                                            <% } %>
+                                                            <% for (var i=1; i <= (Number(pages)) && i <= pages; i++) { %>
+                                                                <% if (i == current) { %>
+                                                                    <li class="page-item active"><a class="page-link" href="<%= pages > 1 ? paginationUrl+i : 'javascript:void(0)' %>"><%= i %></a></li>
+                                                                <% } else { %>
+                                                                    <li class="page-item"><a class="page-link" href="<%= paginationUrl+i %>"><%= i %></a></li>
+                                                                <% } %>
+                                                                <% if (i == Number(current) + 4 && i < pages) { %>
+                                                                    <li class="page-item disabled"><a class="page-link" href="javascript:void(0)">...</a></li>
+                                                                <% } %>
+                                                            <% } %>
+                                                            <% if (current == pages) { %>
+                                                                <li class="page-item disabled"><a class="page-link" href="javascript:void(0)">Last</a></li>
+                                                            <% } else { %>
+                                                                <li class="page-item"><a class="page-link" href="<%= paginationUrl+pages %>">Last</a></li>
+                                                            <% } %>
+                                                        </ul>
+                                                    </nav>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                </div> <!-- end row -->
+
+            </div> <!-- container-fluid -->
+
+        </div> <!-- content -->
+        <!-- Required datatable js -->
+        <script src="/public/plugins/sweet-alert2/sweetalert2.min.js"></script>
+        <script src="/public/plugins/iconpicker/js/universal-icon-picker.js"></script>
+        <script src="/public/assets/pages/amenities.js"></script>
+
+        <%- contentFor('FooterJs') %>
